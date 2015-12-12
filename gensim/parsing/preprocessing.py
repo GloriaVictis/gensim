@@ -8,6 +8,7 @@ import string
 import glob
 
 from gensim import utils
+from nltk.stem.snowball import GermanStemmer
 #from gensim.parsing.porter import PorterStemmer
 
 
@@ -1069,10 +1070,8 @@ def split_alphanum(s):
 
 
 def stem_text(text):
-    print "lalalalalalallalalal"
     text = utils.to_unicode(text)
     p = GermanStemmer()
-    print "lalalalalalallalalal"
     return ' '.join(p.stem(word) for word in text.split())
 stem = stem_text
 
