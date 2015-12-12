@@ -52,7 +52,8 @@ RE_P12 = re.compile('\n(({\|)|(\|-)|(\|}))(.*?)(?=\n)', re.UNICODE) # table form
 RE_P13 = re.compile('\n(\||\!)(.*?\|)*([^|]*?)', re.UNICODE) # table cell formatting
 RE_P14 = re.compile('\[\[Category:[^][]*\]\]', re.UNICODE) # categories
 # Remove File and Image template
-RE_P15 = re.compile('\[\[([fF]ile:|[iI]mage)[^]]*(\]\])', re.UNICODE)
+RE_P15 = re.compile('\[\[([fF]ile:|[iI]mage|[dD]atai)[^]]*(\]\])', re.UNICODE)
+RE_P16 = re.compile('\[\[Kategorie:[^][]*\]\]', re.UNICODE) # categories
 
 
 def filter_wiki(raw):
@@ -84,6 +85,7 @@ def remove_markup(text):
         text = re.sub(RE_P10, "", text) # remove math content
         text = re.sub(RE_P11, "", text) # remove all remaining tags
         text = re.sub(RE_P14, '', text) # remove categories
+        text = re.sub(RE_P16, '', text) # remove categories
         text = re.sub(RE_P5, '\\3', text) # remove urls, keep description
         text = re.sub(RE_P6, '\\2', text) # simplify links, keep description only
         # remove table markup
