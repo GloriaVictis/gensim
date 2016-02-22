@@ -50,11 +50,10 @@ RE_P10 = re.compile('<math([> ].*?)(</math>|/>)', re.DOTALL | re.UNICODE) # math
 RE_P11 = re.compile('<(.*?)>', re.DOTALL | re.UNICODE) # all other tags
 RE_P12 = re.compile('\n(({\|)|(\|-)|(\|}))(.*?)(?=\n)', re.UNICODE) # table formatting
 RE_P13 = re.compile('\n(\||\!)(.*?\|)*([^|]*?)', re.UNICODE) # table cell formatting
-RE_P14 = re.compile('\[\[Category:[^][]*\]\]', re.UNICODE) # categories
+RE_P14 = re.compile('\[\[[Cc]ategory:[^][]*\]\]', re.UNICODE) # categories
 # Remove File and Image template
 RE_P15 = re.compile('\[\[([fF]ile:|[iI]mage|[dD]atai)[^]]*(\]\])', re.UNICODE)
-RE_P16 = re.compile('\[\[Kategorie:[^][]*\]\]', re.UNICODE) # categories
-
+RE_P16 = re.compile('\[\[[Kk]ategorie:[^][]*\]\]', re.UNICODE) # categories
 
 def filter_wiki(raw):
     """
@@ -85,7 +84,6 @@ def remove_markup(text):
         text = re.sub(RE_P10, "", text) # remove math content
         text = re.sub(RE_P11, "", text) # remove all remaining tags
         text = re.sub(RE_P14, '', text) # remove categories
-        text = re.sub(RE_P16, '', text) # remove categories
         text = re.sub(RE_P5, '\\3', text) # remove urls, keep description
         text = re.sub(RE_P6, '\\2', text) # simplify links, keep description only
         # remove table markup
@@ -168,8 +166,8 @@ def tokenize(content):
     that 15 characters (not bytes!).
     """
     # TODO maybe ignore tokens with non-latin characters? (no chinese, arabic, russian etc.)
-    return [token.encode('utf8') for token in utils.tokenize(content, lower=True, errors='ignore')
-            if 2 <= len(token) <= 15 and not token.startswith('_')]
+    return [token.encode('utf8') for token in utils.tokenize(content, fltr=True, errors='ignore')
+            if 2 <= len(token) <= 25 and not token.startswith('_')]
 
 
 def get_namespace(tag):
@@ -239,6 +237,7 @@ def process_article(args):
         result = utils.lemmatize(text)
     else:
         result = tokenize(text)
+        #print result
     return result, title, pageid
 
 
